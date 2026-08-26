@@ -3,9 +3,11 @@ import countriesData from '../data/countries.json'
 import type { Country, CountryWithShares, ProgressLevel } from '../types/country'
 
 const rawCountries = countriesData as Country[]
+const MIN_COUNTRIES = 4
+const GDP_GOAL_SHARE = 50
 
 function progressLevel(share: number): ProgressLevel {
-  if (share >= 50) return 'green'
+  if (share > GDP_GOAL_SHARE) return 'green'
   if (share >= 30) return 'orange'
   return 'red'
 }
@@ -16,6 +18,10 @@ export const useSelectionStore = defineStore('selection', {
   }),
 
   getters: {
+    minCountries(): number {
+      return MIN_COUNTRIES
+    },
+
     countries(): Country[] {
       return rawCountries
     },
@@ -65,16 +71,20 @@ export const useSelectionStore = defineStore('selection', {
       return (this.selectedGdp / this.totalGdp) * 100
     },
 
-    populationLevel(): ProgressLevel {
-      return progressLevel(this.selectedPopulationShare)
-    },
-
     gdpLevel(): ProgressLevel {
       return progressLevel(this.selectedGdpShare)
     },
 
+    countRequirementMet(): boolean {
+      return this.selectedCountries.length >= MIN_COUNTRIES
+    },
+
+    gdpRequirementMet(): boolean {
+      return this.selectedGdpShare > GDP_GOAL_SHARE
+    },
+
     goalReached(): boolean {
-      return this.selectedGdpShare >= 50 && this.selectedPopulationShare >= 50
+      return this.countRequirementMet && this.gdpRequirementMet
     },
   },
 

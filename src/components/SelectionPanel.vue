@@ -29,7 +29,22 @@ function formatPercent(n: number): string {
       </button>
     </div>
 
-    <div v-if="store.goalReached" class="goal-badge">🎯 Goal reached: ≥50% GDP and ≥50% population</div>
+    <div v-if="store.goalReached" class="goal-badge">
+      🎯 Goal reached: ≥{{ store.minCountries }} countries and &gt;50% GDP
+    </div>
+
+    <div class="requirements">
+      <div class="requirement" :class="{ met: store.countRequirementMet }">
+        <span class="req-icon">{{ store.countRequirementMet ? '✓' : '○' }}</span>
+        <span class="req-label">At least {{ store.minCountries }} countries</span>
+        <span class="req-value">{{ store.selectedCountries.length }} / {{ store.minCountries }}</span>
+      </div>
+      <div class="requirement" :class="{ met: store.gdpRequirementMet }">
+        <span class="req-icon">{{ store.gdpRequirementMet ? '✓' : '○' }}</span>
+        <span class="req-label">GDP share above 50%</span>
+        <span class="req-value">{{ formatPercent(gdpShare) }}</span>
+      </div>
+    </div>
 
     <div class="metrics">
       <div class="metric">
@@ -48,15 +63,11 @@ function formatPercent(n: number): string {
 
       <div class="metric">
         <div class="metric-label">
-          <span>Population share</span>
+          <span>Population share (info only)</span>
           <span>{{ formatPercent(popShare) }}</span>
         </div>
         <div class="bar-track">
-          <div
-            class="bar-fill"
-            :class="`level-${store.populationLevel}`"
-            :style="{ width: `${Math.min(popShare, 100)}%` }"
-          />
+          <div class="bar-fill bar-neutral" :style="{ width: `${Math.min(popShare, 100)}%` }" />
         </div>
       </div>
     </div>
@@ -122,6 +133,46 @@ function formatPercent(n: number): string {
   font-size: 0.9rem;
 }
 
+.requirements {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.requirement {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
+  background: #20242c;
+  font-size: 0.85rem;
+  color: #9aa3af;
+}
+
+.requirement.met {
+  color: #e4e7eb;
+}
+
+.req-icon {
+  width: 1.1rem;
+  text-align: center;
+  color: #e53935;
+}
+
+.requirement.met .req-icon {
+  color: #43a047;
+}
+
+.req-label {
+  flex: 1;
+}
+
+.req-value {
+  font-variant-numeric: tabular-nums;
+  color: #c3c9d1;
+}
+
 .metrics {
   display: flex;
   flex-direction: column;
@@ -158,6 +209,10 @@ function formatPercent(n: number): string {
 
 .level-green {
   background: #43a047;
+}
+
+.bar-neutral {
+  background: #5c6773;
 }
 
 .selected-list {

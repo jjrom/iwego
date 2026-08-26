@@ -189,13 +189,6 @@
     "year": 2024
   },
   {
-    "id": "CH",
-    "name": "Switzerland",
-    "population": 9005582,
-    "gdpPerCapita": 107702,
-    "year": 2024
-  },
-  {
     "id": "NO",
     "name": "Norway",
     "population": 5572279,
@@ -207,13 +200,6 @@
     "name": "Iceland",
     "population": 386506,
     "gdpPerCapita": 85863,
-    "year": 2024
-  },
-  {
-    "id": "LI",
-    "name": "Liechtenstein",
-    "population": 40450,
-    "gdpPerCapita": 220167,
     "year": 2024
   },
   {
