@@ -3,7 +3,7 @@ import { defineConfig } from 'vite'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: '/iwego/',
+  base: './',
   plugins: [vue()],
   optimizeDeps: {
     exclude: ['maplibre-gl'],
