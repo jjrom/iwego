@@ -46,7 +46,7 @@ function formatGdp(n: number): string {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  background: #f0f2f5;
+  background: #14171c;
 }
 
 .app-header {
@@ -54,20 +54,21 @@ function formatGdp(n: number): string {
   align-items: center;
   justify-content: space-between;
   padding: 0.75rem 1.5rem;
-  background: #fff;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  background: #1a1d24;
+  border-bottom: 1px solid #2a2e37;
 }
 
 .app-header h1 {
   margin: 0;
   font-size: 1.4rem;
+  color: #f0f2f5;
 }
 
 .totals {
   display: flex;
   gap: 1.5rem;
   font-size: 0.9rem;
-  color: #444;
+  color: #9aa3af;
 }
 
 .app-main {

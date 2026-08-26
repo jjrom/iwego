@@ -79,9 +79,9 @@ function sortIndicator(key: SortKey): string {
 
 <style scoped>
 .table-wrapper {
-  background: #fff;
+  background: #1a1d24;
+  border: 1px solid #2a2e37;
   border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   overflow: auto;
   max-height: 480px;
 }
@@ -90,23 +90,25 @@ table {
   width: 100%;
   border-collapse: collapse;
   font-size: 0.85rem;
+  color: #e4e7eb;
 }
 
 th {
   position: sticky;
   top: 0;
-  background: #f5f5f5;
+  background: #20242c;
   text-align: left;
   padding: 0.5rem 0.75rem;
   cursor: pointer;
   user-select: none;
   white-space: nowrap;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid #2a2e37;
+  color: #c3c9d1;
 }
 
 td {
   padding: 0.4rem 0.75rem;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid #24282f;
 }
 
 tbody tr {
@@ -114,10 +116,10 @@ tbody tr {
 }
 
 tbody tr:hover {
-  background: #f9f9f9;
+  background: #20242c;
 }
 
 tbody tr.selected {
-  background: #e6f4ea;
+  background: rgba(67, 160, 71, 0.16);
 }
 </style>

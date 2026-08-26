@@ -82,9 +82,9 @@ function formatPercent(n: number): string {
   flex-direction: column;
   gap: 1rem;
   padding: 1rem;
-  background: #fff;
+  background: #1a1d24;
+  border: 1px solid #2a2e37;
   border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .panel-header {
@@ -96,13 +96,15 @@ function formatPercent(n: number): string {
 .panel-header h2 {
   margin: 0;
   font-size: 1.1rem;
+  color: #f0f2f5;
 }
 
 .reset-btn {
   padding: 0.35rem 0.75rem;
-  border: 1px solid #ccc;
+  border: 1px solid #3a3f4a;
   border-radius: 6px;
-  background: #f5f5f5;
+  background: #262a33;
+  color: #e4e7eb;
   cursor: pointer;
 }
 
@@ -113,8 +115,8 @@ function formatPercent(n: number): string {
 
 .goal-badge {
   padding: 0.5rem 0.75rem;
-  background: #e6f4ea;
-  color: #1b5e20;
+  background: rgba(67, 160, 71, 0.18);
+  color: #81c784;
   border-radius: 6px;
   font-weight: 600;
   font-size: 0.9rem;
@@ -131,12 +133,12 @@ function formatPercent(n: number): string {
   justify-content: space-between;
   font-size: 0.85rem;
   margin-bottom: 0.25rem;
-  color: #333;
+  color: #c3c9d1;
 }
 
 .bar-track {
   height: 10px;
-  background: #eee;
+  background: #2a2e37;
   border-radius: 6px;
   overflow: hidden;
 }
@@ -170,7 +172,7 @@ function formatPercent(n: number): string {
 }
 
 .empty {
-  color: #888;
+  color: #7c8592;
   font-size: 0.85rem;
   font-style: italic;
 }
@@ -181,13 +183,14 @@ function formatPercent(n: number): string {
   justify-content: space-between;
   gap: 0.5rem;
   padding: 0.35rem 0.5rem;
-  background: #f7f7f7;
+  background: #22262e;
   border-radius: 6px;
   font-size: 0.85rem;
+  color: #e4e7eb;
 }
 
 .selected-item-details {
-  color: #666;
+  color: #9aa3af;
   font-size: 0.78rem;
   white-space: nowrap;
 }
@@ -196,12 +199,12 @@ function formatPercent(n: number): string {
   border: none;
   background: transparent;
   cursor: pointer;
-  color: #999;
+  color: #7c8592;
   font-size: 0.85rem;
   padding: 0 0.25rem;
 }
 
 .remove-btn:hover {
-  color: #e53935;
+  color: #e57373;
 }
 </style>

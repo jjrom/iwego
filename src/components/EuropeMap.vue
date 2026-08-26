@@ -75,17 +75,7 @@ onMounted(() => {
     requestAnimationFrame(() => {
       map = new maplibregl.Map({
         container,
-        style: {
-          version: 8,
-          sources: {},
-          layers: [
-            {
-              id: 'background',
-              type: 'background',
-              paint: { 'background-color': '#dceaf5' },
-            },
-          ],
-        },
+        style: 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
         bounds,
         fitBoundsOptions: { padding: 24 },
         attributionControl: false,
@@ -120,14 +110,14 @@ function setupMap(map: maplibregl.Map) {
         'fill-color': [
           'case',
           ['boolean', ['feature-state', 'selected'], false],
-          '#2e7d32',
-          '#ffffff',
+          '#4caf50',
+          '#c7d1db',
         ],
         'fill-opacity': [
           'case',
-          ['boolean', ['feature-state', 'hover'], false],
-          0.85,
-          0.65,
+          ['boolean', ['feature-state', 'selected'], false],
+          ['case', ['boolean', ['feature-state', 'hover'], false], 0.85, 0.7],
+          ['case', ['boolean', ['feature-state', 'hover'], false], 0.35, 0.12],
         ],
       },
     })
@@ -137,7 +127,12 @@ function setupMap(map: maplibregl.Map) {
       type: 'line',
       source: SOURCE_ID,
       paint: {
-        'line-color': '#37474f',
+        'line-color': [
+          'case',
+          ['boolean', ['feature-state', 'selected'], false],
+          '#81c784',
+          '#8fa3b8',
+        ],
         'line-width': [
           'case',
           ['boolean', ['feature-state', 'hover'], false],
@@ -213,5 +208,16 @@ watch(() => store.selectedIds, applySelectionState, { deep: true })
   width: 100%;
   height: 100%;
   min-height: 420px;
+}
+
+:deep(.maplibregl-popup-content) {
+  background: #1e222a;
+  color: #e4e7eb;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+:deep(.maplibregl-popup-tip) {
+  border-top-color: #1e222a;
+  border-bottom-color: #1e222a;
 }
 </style>
