@@ -1,0 +1,207 @@
+<script setup lang="ts">
+import { computed } from 'vue'
+import { useSelectionStore } from '../stores/selection'
+
+const store = useSelectionStore()
+
+const gdpShare = computed(() => store.selectedGdpShare)
+const popShare = computed(() => store.selectedPopulationShare)
+
+function formatNumber(n: number): string {
+  return new Intl.NumberFormat('en-US').format(Math.round(n))
+}
+
+function formatPercent(n: number): string {
+  return `${n.toFixed(1)}%`
+}
+</script>
+
+<template>
+  <div class="panel">
+    <div class="panel-header">
+      <h2>Selection</h2>
+      <button
+        class="reset-btn"
+        :disabled="store.selectedCountries.length === 0"
+        @click="store.reset()"
+      >
+        Reset
+      </button>
+    </div>
+
+    <div v-if="store.goalReached" class="goal-badge">🎯 Goal reached: ≥50% GDP and ≥50% population</div>
+
+    <div class="metrics">
+      <div class="metric">
+        <div class="metric-label">
+          <span>GDP share</span>
+          <span>{{ formatPercent(gdpShare) }}</span>
+        </div>
+        <div class="bar-track">
+          <div
+            class="bar-fill"
+            :class="`level-${store.gdpLevel}`"
+            :style="{ width: `${Math.min(gdpShare, 100)}%` }"
+          />
+        </div>
+      </div>
+
+      <div class="metric">
+        <div class="metric-label">
+          <span>Population share</span>
+          <span>{{ formatPercent(popShare) }}</span>
+        </div>
+        <div class="bar-track">
+          <div
+            class="bar-fill"
+            :class="`level-${store.populationLevel}`"
+            :style="{ width: `${Math.min(popShare, 100)}%` }"
+          />
+        </div>
+      </div>
+    </div>
+
+    <ul class="selected-list">
+      <li v-if="store.selectedCountries.length === 0" class="empty">
+        Click countries on the map to select them.
+      </li>
+      <li v-for="c in store.selectedCountries" :key="c.id" class="selected-item">
+        <span>{{ c.name }}</span>
+        <span class="selected-item-details">
+          {{ formatNumber(c.population) }} · ${{ formatNumber(c.gdpPerCapita) }}/cap
+        </span>
+        <button class="remove-btn" @click="store.removeCountry(c.id)">✕</button>
+      </li>
+    </ul>
+  </div>
+</template>
+
+<style scoped>
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.panel-header h2 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.reset-btn {
+  padding: 0.35rem 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #f5f5f5;
+  cursor: pointer;
+}
+
+.reset-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.goal-badge {
+  padding: 0.5rem 0.75rem;
+  background: #e6f4ea;
+  color: #1b5e20;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.metrics {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.metric-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  margin-bottom: 0.25rem;
+  color: #333;
+}
+
+.bar-track {
+  height: 10px;
+  background: #eee;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+.level-red {
+  background: #e53935;
+}
+
+.level-orange {
+  background: #fb8c00;
+}
+
+.level-green {
+  background: #43a047;
+}
+
+.selected-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.empty {
+  color: #888;
+  font-size: 0.85rem;
+  font-style: italic;
+}
+
+.selected-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.35rem 0.5rem;
+  background: #f7f7f7;
+  border-radius: 6px;
+  font-size: 0.85rem;
+}
+
+.selected-item-details {
+  color: #666;
+  font-size: 0.78rem;
+  white-space: nowrap;
+}
+
+.remove-btn {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: #999;
+  font-size: 0.85rem;
+  padding: 0 0.25rem;
+}
+
+.remove-btn:hover {
+  color: #e53935;
+}
+</style>
