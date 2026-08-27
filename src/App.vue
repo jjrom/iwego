@@ -22,10 +22,19 @@ function formatGdp(n: number): string {
 <template>
   <div class="app">
     <header class="app-header">
-      <h1>I(WE)GO</h1>
+      <div class="masthead">
+        <h1>I(WE)GO</h1>
+        <p class="masthead-sub">Qualified majority simulator &middot; 31 member states</p>
+      </div>
       <div class="totals">
-        <span>Total population: {{ formatNumber(totalPopulation) }}</span>
-        <span>Total GDP: {{ formatGdp(totalGdp) }}</span>
+        <div class="total-item">
+          <span class="total-label">Population</span>
+          <span class="total-value">{{ formatNumber(totalPopulation) }}</span>
+        </div>
+        <div class="total-item">
+          <span class="total-label">Combined GDP</span>
+          <span class="total-value">{{ formatGdp(totalGdp) }}</span>
+        </div>
       </div>
     </header>
 
@@ -46,29 +55,56 @@ function formatGdp(n: number): string {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  background: #14171c;
+  background: var(--color-bg);
 }
 
 .app-header {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
-  padding: 0.75rem 1.5rem;
-  background: #1a1d24;
-  border-bottom: 1px solid #2a2e37;
+  padding: 1rem 1.5rem 0.85rem;
+  border-bottom: 1px solid var(--color-line);
 }
 
-.app-header h1 {
+.masthead h1 {
   margin: 0;
-  font-size: 1.4rem;
-  color: #f0f2f5;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.9rem;
+  letter-spacing: -0.01em;
+  color: var(--color-text);
+}
+
+.masthead-sub {
+  margin: 0.15rem 0 0;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-gold);
 }
 
 .totals {
   display: flex;
-  gap: 1.5rem;
-  font-size: 0.9rem;
-  color: #9aa3af;
+  gap: 2rem;
+}
+
+.total-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.total-label {
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.total-value {
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  color: var(--color-text);
 }
 
 .app-main {

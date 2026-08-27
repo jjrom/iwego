@@ -12,5 +12,3 @@ export interface CountryWithShares extends Country {
   populationShare: number
   selected: boolean
 }
-
-export type ProgressLevel = 'red' | 'orange' | 'green'

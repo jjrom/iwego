@@ -52,11 +52,11 @@ function sortIndicator(key: SortKey): string {
     <table>
       <thead>
         <tr>
-          <th @click="sortBy('name')">Country {{ sortIndicator('name') }}</th>
+          <th @click="sortBy('name')">Member state {{ sortIndicator('name') }}</th>
           <th @click="sortBy('population')">Population {{ sortIndicator('population') }}</th>
           <th @click="sortBy('gdpPerCapita')">GDP / capita {{ sortIndicator('gdpPerCapita') }}</th>
-          <th @click="sortBy('populationShare')">% of EU population {{ sortIndicator('populationShare') }}</th>
-          <th @click="sortBy('gdpShare')">% of EU GDP {{ sortIndicator('gdpShare') }}</th>
+          <th @click="sortBy('populationShare')">Share of population {{ sortIndicator('populationShare') }}</th>
+          <th @click="sortBy('gdpShare')">Share of GDP {{ sortIndicator('gdpShare') }}</th>
         </tr>
       </thead>
       <tbody>
@@ -67,10 +67,10 @@ function sortIndicator(key: SortKey): string {
           @click="store.toggleCountry(c.id)"
         >
           <td>{{ c.name }}</td>
-          <td>{{ formatNumber(c.population) }}</td>
-          <td>${{ formatNumber(c.gdpPerCapita) }}</td>
-          <td>{{ formatPercent(c.populationShare) }}</td>
-          <td>{{ formatPercent(c.gdpShare) }}</td>
+          <td class="num">{{ formatNumber(c.population) }}</td>
+          <td class="num">${{ formatNumber(c.gdpPerCapita) }}</td>
+          <td class="num">{{ formatPercent(c.populationShare) }}</td>
+          <td class="num">{{ formatPercent(c.gdpShare) }}</td>
         </tr>
       </tbody>
     </table>
@@ -79,9 +79,9 @@ function sortIndicator(key: SortKey): string {
 
 <style scoped>
 .table-wrapper {
-  background: #1a1d24;
-  border: 1px solid #2a2e37;
-  border-radius: 8px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: 4px;
   overflow: auto;
   max-height: 480px;
 }
@@ -89,26 +89,39 @@ function sortIndicator(key: SortKey): string {
 table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.85rem;
-  color: #e4e7eb;
+  font-size: 0.83rem;
+  color: var(--color-text);
 }
 
 th {
   position: sticky;
   top: 0;
-  background: #20242c;
+  background: var(--color-surface-raised);
   text-align: left;
   padding: 0.5rem 0.75rem;
   cursor: pointer;
   user-select: none;
   white-space: nowrap;
-  border-bottom: 1px solid #2a2e37;
-  color: #c3c9d1;
+  border-bottom: 1px solid var(--color-line);
+  color: var(--color-text-muted);
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+th:hover {
+  color: var(--color-gold);
 }
 
 td {
   padding: 0.4rem 0.75rem;
-  border-bottom: 1px solid #24282f;
+  border-bottom: 1px solid var(--color-line);
+}
+
+td.num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
 }
 
 tbody tr {
@@ -116,10 +129,14 @@ tbody tr {
 }
 
 tbody tr:hover {
-  background: #20242c;
+  background: var(--color-surface-raised);
 }
 
 tbody tr.selected {
-  background: rgba(67, 160, 71, 0.16);
+  background: var(--color-gold-soft);
+}
+
+tbody tr.selected td:first-child {
+  color: var(--color-gold);
 }
 </style>

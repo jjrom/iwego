@@ -110,8 +110,8 @@ function setupMap(map: maplibregl.Map) {
         'fill-color': [
           'case',
           ['boolean', ['feature-state', 'selected'], false],
-          '#4caf50',
-          '#c7d1db',
+          '#e0b13c',
+          '#efe9d8',
         ],
         'fill-opacity': [
           'case',
@@ -130,8 +130,8 @@ function setupMap(map: maplibregl.Map) {
         'line-color': [
           'case',
           ['boolean', ['feature-state', 'selected'], false],
-          '#81c784',
-          '#8fa3b8',
+          '#f3cf76',
+          '#5c6f9e',
         ],
         'line-width': [
           'case',
@@ -165,9 +165,9 @@ function setupMap(map: maplibregl.Map) {
         popup
           .setLngLat(e.lngLat)
           .setHTML(
-            `<strong>${country.name}</strong><br/>` +
-              `Population: ${formatNumber(country.population)}<br/>` +
-              `GDP per capita: $${formatNumber(country.gdpPerCapita)}`,
+            `<strong>${country.name}</strong>` +
+              `<span>Population <b>${formatNumber(country.population)}</b></span>` +
+              `<span>GDP / capita <b>$${formatNumber(country.gdpPerCapita)}</b></span>`,
           )
           .addTo(activeMap)
       }
@@ -211,13 +211,32 @@ watch(() => store.selectedIds, applySelectionState, { deep: true })
 }
 
 :deep(.maplibregl-popup-content) {
-  background: #1e222a;
-  color: #e4e7eb;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+}
+
+:deep(.maplibregl-popup-content strong) {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 0.15rem;
+}
+
+:deep(.maplibregl-popup-content b) {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  color: var(--color-gold);
 }
 
 :deep(.maplibregl-popup-tip) {
-  border-top-color: #1e222a;
-  border-bottom-color: #1e222a;
+  border-top-color: var(--color-surface);
+  border-bottom-color: var(--color-surface);
 }
 </style>

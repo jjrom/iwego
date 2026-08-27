@@ -1,16 +1,10 @@
 import { defineStore } from 'pinia'
 import countriesData from '../data/countries.json'
-import type { Country, CountryWithShares, ProgressLevel } from '../types/country'
+import type { Country, CountryWithShares } from '../types/country'
 
 const rawCountries = countriesData as Country[]
 const MIN_COUNTRIES = 4
 const GDP_GOAL_SHARE = 50
-
-function progressLevel(share: number): ProgressLevel {
-  if (share > GDP_GOAL_SHARE) return 'green'
-  if (share >= 30) return 'orange'
-  return 'red'
-}
 
 export const useSelectionStore = defineStore('selection', {
   state: () => ({
@@ -69,10 +63,6 @@ export const useSelectionStore = defineStore('selection', {
     selectedGdpShare(): number {
       if (this.totalGdp === 0) return 0
       return (this.selectedGdp / this.totalGdp) * 100
-    },
-
-    gdpLevel(): ProgressLevel {
-      return progressLevel(this.selectedGdpShare)
     },
 
     countRequirementMet(): boolean {
