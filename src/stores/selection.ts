@@ -3,7 +3,7 @@ import countriesData from '../data/countries.json'
 import type { Country, CountryWithShares } from '../types/country'
 
 const rawCountries = countriesData as Country[]
-const MIN_COUNTRIES = 4
+const MIN_COUNTRIES = 8
 const GDP_GOAL_SHARE = 50
 
 export const useSelectionStore = defineStore('selection', {
