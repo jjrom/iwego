@@ -5,7 +5,7 @@ import type { CountryWithShares } from '../types/country'
 
 const store = useSelectionStore()
 
-type SortKey = 'name' | 'population' | 'gdpPerCapita' | 'populationShare' | 'gdpShare'
+type SortKey = 'name' | 'population' | 'populationShare' | 'gdpShare'
 
 const sortKey = ref<SortKey>('gdpShare')
 const sortAsc = ref(false)
@@ -37,8 +37,8 @@ function formatNumber(n: number): string {
   return new Intl.NumberFormat('en-US').format(Math.round(n))
 }
 
-function formatPercent(n: number): string {
-  return `${n.toFixed(1)}%`
+function formatPercent(n: number, decimals = 1): string {
+  return `${n.toFixed(decimals)}%`
 }
 
 function sortIndicator(key: SortKey): string {
@@ -54,7 +54,6 @@ function sortIndicator(key: SortKey): string {
         <tr>
           <th @click="sortBy('name')">Member state {{ sortIndicator('name') }}</th>
           <th @click="sortBy('population')">Population {{ sortIndicator('population') }}</th>
-          <th @click="sortBy('gdpPerCapita')">GDP / capita {{ sortIndicator('gdpPerCapita') }}</th>
           <th @click="sortBy('populationShare')">Share of population {{ sortIndicator('populationShare') }}</th>
           <th @click="sortBy('gdpShare')">Share of GDP {{ sortIndicator('gdpShare') }}</th>
         </tr>
@@ -68,9 +67,8 @@ function sortIndicator(key: SortKey): string {
         >
           <td>{{ c.name }}</td>
           <td class="num">{{ formatNumber(c.population) }}</td>
-          <td class="num">${{ formatNumber(c.gdpPerCapita) }}</td>
           <td class="num">{{ formatPercent(c.populationShare) }}</td>
-          <td class="num">{{ formatPercent(c.gdpShare) }}</td>
+          <td class="num">{{ formatPercent(c.gdpShare, 2) }}</td>
         </tr>
       </tbody>
     </table>

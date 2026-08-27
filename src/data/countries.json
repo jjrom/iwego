@@ -3,217 +3,217 @@
     "id": "DE",
     "name": "Germany",
     "population": 83516593,
-    "gdpPerCapita": 56104,
-    "year": 2024
+    "year": 2024,
+    "gdpSharePercent": 20.73
   },
   {
     "id": "AT",
     "name": "Austria",
     "population": 9177982,
-    "gdpPerCapita": 58269,
-    "year": 2024
+    "year": 2024,
+    "gdpSharePercent": 2.29
   },
   {
     "id": "BE",
     "name": "Belgium",
     "population": 11858610,
-    "gdpPerCapita": 56582,
-    "year": 2024
+    "year": 2024,
+    "gdpSharePercent": 2.88
   },
   {
     "id": "BG",
     "name": "Bulgaria",
     "population": 6441421,
-    "gdpPerCapita": 17597,
-    "year": 2024
+    "year": 2024,
+    "gdpSharePercent": 0.41
   },
   {
     "id": "CY",
     "name": "Cyprus",
     "population": 1358282,
-    "gdpPerCapita": 38674,
-    "year": 2024
+    "year": 2024,
+    "gdpSharePercent": 0.14
   },
   {
     "id": "HR",
     "name": "Croatia",
     "population": 3866200,
-    "gdpPerCapita": 24050,
-    "year": 2024
+    "year": 2024,
+    "gdpSharePercent": 0.35
   },
   {
     "id": "DK",
     "name": "Denmark",
     "population": 5976992,
-    "gdpPerCapita": 71026,
-    "year": 2024
+    "year": 2024,
+    "gdpSharePercent": 1.96
   },
   {
     "id": "ES",
     "name": "Spain",
     "population": 48848840,
-    "gdpPerCapita": 35327,
-    "year": 2024
+    "year": 2024,
+    "gdpSharePercent": 6.97
   },
   {
     "id": "EE",
     "name": "Estonia",
     "population": 1372341,
-    "gdpPerCapita": 31428,
-    "year": 2024
+    "year": 2024,
+    "gdpSharePercent": 0.18
   },
   {
     "id": "FI",
     "name": "Finland",
     "population": 5619911,
-    "gdpPerCapita": 53156,
-    "year": 2024
+    "year": 2024,
+    "gdpSharePercent": 1.37
   },
   {
     "id": "FR",
     "name": "France",
     "population": 68551653,
-    "gdpPerCapita": 46103,
-    "year": 2024
+    "year": 2024,
+    "gdpSharePercent": 14.07
   },
   {
     "id": "GR",
     "name": "Greece",
     "population": 10405134,
-    "gdpPerCapita": 24626,
-    "year": 2024
+    "year": 2024,
+    "gdpSharePercent": 1.04
   },
   {
     "id": "HU",
     "name": "Hungary",
     "population": 9562065,
-    "gdpPerCapita": 23305,
-    "year": 2024
+    "year": 2024,
+    "gdpSharePercent": 0.86
   },
   {
     "id": "IE",
     "name": "Ireland",
     "population": 5395790,
-    "gdpPerCapita": 112895,
-    "year": 2024
+    "year": 2024,
+    "gdpSharePercent": 1.83
   },
   {
     "id": "IT",
     "name": "Italy",
     "population": 58952704,
-    "gdpPerCapita": 40430,
-    "year": 2024
+    "year": 2024,
+    "gdpSharePercent": 10.29
   },
   {
     "id": "LV",
     "name": "Latvia",
     "population": 1866124,
-    "gdpPerCapita": 23579,
-    "year": 2024
+    "year": 2024,
+    "gdpSharePercent": 0.18
   },
   {
     "id": "LT",
     "name": "Lithuania",
     "population": 2888278,
-    "gdpPerCapita": 29604,
-    "year": 2024
+    "year": 2024,
+    "gdpSharePercent": 0.33
   },
   {
     "id": "LU",
     "name": "Luxembourg",
     "population": 677012,
-    "gdpPerCapita": 137782,
-    "year": 2024
+    "year": 2024,
+    "gdpSharePercent": 0.26
   },
   {
     "id": "MT",
     "name": "Malta",
     "population": 568847,
-    "gdpPerCapita": 44024,
-    "year": 2024
+    "year": 2024,
+    "gdpSharePercent": 0.08
   },
   {
     "id": "NL",
     "name": "Netherlands",
     "population": 17993485,
-    "gdpPerCapita": 67465,
-    "year": 2024
+    "year": 2024,
+    "gdpSharePercent": 5.05
   },
   {
     "id": "PL",
     "name": "Poland",
     "population": 36559233,
-    "gdpPerCapita": 25104,
-    "year": 2024
+    "year": 2024,
+    "gdpSharePercent": 3.24
   },
   {
     "id": "PT",
     "name": "Portugal",
     "population": 10694681,
-    "gdpPerCapita": 29328,
-    "year": 2024
+    "year": 2024,
+    "gdpSharePercent": 1.22
   },
   {
     "id": "CZ",
     "name": "Czechia",
     "population": 10905028,
-    "gdpPerCapita": 31828,
-    "year": 2024
+    "year": 2024,
+    "gdpSharePercent": 1.42
   },
   {
     "id": "RO",
     "name": "Romania",
     "population": 19051804,
-    "gdpPerCapita": 20080,
-    "year": 2024
+    "year": 2024,
+    "gdpSharePercent": 1.42
   },
   {
     "id": "SK",
     "name": "Slovakia",
     "population": 5422069,
-    "gdpPerCapita": 25993,
-    "year": 2024
+    "year": 2024,
+    "gdpSharePercent": 0.56
   },
   {
     "id": "SI",
     "name": "Slovenia",
     "population": 2127400,
-    "gdpPerCapita": 34301,
-    "year": 2024
+    "year": 2024,
+    "gdpSharePercent": 0.29
   },
   {
     "id": "SE",
     "name": "Sweden",
     "population": 10569709,
-    "gdpPerCapita": 57223,
-    "year": 2024
+    "year": 2024,
+    "gdpSharePercent": 2.92
   },
   {
     "id": "NO",
     "name": "Norway",
     "population": 5572279,
-    "gdpPerCapita": 89889,
-    "year": 2024
+    "year": 2024,
+    "gdpSharePercent": 2.47
   },
   {
     "id": "IS",
     "name": "Iceland",
     "population": 386506,
-    "gdpPerCapita": 85863,
-    "year": 2024
+    "year": 2024,
+    "gdpSharePercent": 0.13
   },
   {
     "id": "GB",
     "name": "United Kingdom",
     "population": 69281000,
-    "gdpPerCapita": 53341,
-    "year": 2024
+    "year": 2024,
+    "gdpSharePercent": 15.02
   },
   {
     "id": "MC",
     "name": "Monaco",
     "population": 38631,
-    "gdpPerCapita": 288002,
-    "year": 2024
+    "year": 2024,
+    "gdpSharePercent": 0.04
   }
 ]

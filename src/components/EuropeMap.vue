@@ -167,7 +167,7 @@ function setupMap(map: maplibregl.Map) {
           .setHTML(
             `<strong>${country.name}</strong>` +
               `<span>Population <b>${formatNumber(country.population)}</b></span>` +
-              `<span>GDP / capita <b>$${formatNumber(country.gdpPerCapita)}</b></span>`,
+              `<span>Share of GDP <b>${country.gdpSharePercent.toFixed(2)}%</b></span>`,
           )
           .addTo(activeMap)
       }

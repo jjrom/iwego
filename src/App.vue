@@ -8,14 +8,10 @@ import CountryTable from './components/CountryTable.vue'
 const store = useSelectionStore()
 
 const totalPopulation = computed(() => store.totalPopulation)
-const totalGdp = computed(() => store.totalGdp)
+const memberStateCount = computed(() => store.countries.length)
 
 function formatNumber(n: number): string {
   return new Intl.NumberFormat('en-US').format(Math.round(n))
-}
-
-function formatGdp(n: number): string {
-  return `$${new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 1 }).format(n)}`
 }
 </script>
 
@@ -32,8 +28,8 @@ function formatGdp(n: number): string {
           <span class="total-value">{{ formatNumber(totalPopulation) }}</span>
         </div>
         <div class="total-item">
-          <span class="total-label">Combined GDP</span>
-          <span class="total-value">{{ formatGdp(totalGdp) }}</span>
+          <span class="total-label">Member states</span>
+          <span class="total-value">{{ memberStateCount }}</span>
         </div>
       </div>
     </header>

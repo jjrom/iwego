@@ -24,23 +24,19 @@ export const useSelectionStore = defineStore('selection', {
       return rawCountries.reduce((sum, c) => sum + c.population, 0)
     },
 
-    totalGdp(): number {
-      return rawCountries.reduce((sum, c) => sum + c.population * c.gdpPerCapita, 0)
+    /** Sum of the given per-country GDP shares; should be ~100 by construction. */
+    totalGdpSharePercent(): number {
+      return rawCountries.reduce((sum, c) => sum + c.gdpSharePercent, 0)
     },
 
     countriesWithShares(): CountryWithShares[] {
       const totalPop = this.totalPopulation
-      const totalGdp = this.totalGdp
-      return rawCountries.map((c) => {
-        const gdp = c.population * c.gdpPerCapita
-        return {
-          ...c,
-          gdp,
-          gdpShare: (gdp / totalGdp) * 100,
-          populationShare: (c.population / totalPop) * 100,
-          selected: this.selectedIds.has(c.id),
-        }
-      })
+      return rawCountries.map((c) => ({
+        ...c,
+        gdpShare: c.gdpSharePercent,
+        populationShare: (c.population / totalPop) * 100,
+        selected: this.selectedIds.has(c.id),
+      }))
     },
 
     selectedCountries(): CountryWithShares[] {
@@ -51,18 +47,13 @@ export const useSelectionStore = defineStore('selection', {
       return this.selectedCountries.reduce((sum, c) => sum + c.population, 0)
     },
 
-    selectedGdp(): number {
-      return this.selectedCountries.reduce((sum, c) => sum + c.gdp, 0)
-    },
-
     selectedPopulationShare(): number {
       if (this.totalPopulation === 0) return 0
       return (this.selectedPopulation / this.totalPopulation) * 100
     },
 
     selectedGdpShare(): number {
-      if (this.totalGdp === 0) return 0
-      return (this.selectedGdp / this.totalGdp) * 100
+      return this.selectedCountries.reduce((sum, c) => sum + c.gdpSharePercent, 0)
     },
 
     countRequirementMet(): boolean {

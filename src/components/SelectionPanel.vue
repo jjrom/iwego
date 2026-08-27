@@ -88,7 +88,7 @@ function formatPercent(n: number): string {
       <li v-for="c in store.selectedCountries" :key="c.id" class="selected-item">
         <span class="selected-item-name">{{ c.name }}</span>
         <span class="selected-item-details">
-          {{ formatNumber(c.population) }} · ${{ formatNumber(c.gdpPerCapita) }}/cap
+          {{ formatNumber(c.population) }} &middot; {{ c.gdpSharePercent.toFixed(2) }}% GDP
         </span>
         <button class="remove-btn" :aria-label="`Remove ${c.name}`" @click="store.removeCountry(c.id)">✕</button>
       </li>
