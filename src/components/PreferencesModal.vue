@@ -23,18 +23,32 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown))
 
       <p class="modal-intro">
         Pinned member states are pre-selected when the app loads and can't be removed from the
-        coalition &mdash; uncheck a state here to make it removable again.
+        coalition. Ratified member states are additionally marked as ratified from the start
+        &mdash; both settings are remembered on this device.
       </p>
+
+      <div class="country-list-header">
+        <span>Member state</span>
+        <span class="col-label">Pinned</span>
+        <span class="col-label">Ratified</span>
+      </div>
 
       <ul class="country-list">
         <li v-for="c in store.countries" :key="c.id" class="country-row">
-          <label>
+          <span class="country-name">{{ c.name }}</span>
+          <label class="col-checkbox" :aria-label="`Pin ${c.name}`">
             <input
               type="checkbox"
               :checked="store.lockedIds.has(c.id)"
               @change="store.toggleLocked(c.id)"
             />
-            <span>{{ c.name }}</span>
+          </label>
+          <label class="col-checkbox" :aria-label="`Ratify ${c.name} by default`">
+            <input
+              type="checkbox"
+              :checked="store.defaultRatifiedIds.has(c.id)"
+              @change="store.toggleDefaultRatified(c.id)"
+            />
           </label>
         </li>
       </ul>
@@ -109,6 +123,21 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown))
   color: var(--color-text-muted);
 }
 
+.country-list-header {
+  display: grid;
+  grid-template-columns: 1fr 4.5rem 4.5rem;
+  align-items: center;
+  padding: 0 1.25rem 0.4rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.col-label {
+  text-align: center;
+}
+
 .country-list {
   list-style: none;
   margin: 0;
@@ -120,6 +149,9 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown))
 }
 
 .country-row {
+  display: grid;
+  grid-template-columns: 1fr 4.5rem 4.5rem;
+  align-items: center;
   padding: 0.4rem 0;
   border-bottom: 1px solid var(--color-line);
 }
@@ -128,12 +160,14 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown))
   border-bottom: none;
 }
 
-.country-row label {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
+.country-name {
   font-size: 0.85rem;
   color: var(--color-text);
+}
+
+.col-checkbox {
+  display: flex;
+  justify-content: center;
   cursor: pointer;
 }
 
@@ -141,6 +175,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown))
   accent-color: var(--color-gold);
   width: 1rem;
   height: 1rem;
+  cursor: pointer;
 }
 
 .modal-footer {

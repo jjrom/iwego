@@ -8,12 +8,14 @@ const GNI_GOAL_SHARE = 50
 
 const LOCKED_IDS_STORAGE_KEY = 'iwego:lockedCountryIds'
 const DEFAULT_LOCKED_IDS = ['NO', 'FR', 'GR']
+const DEFAULT_RATIFIED_IDS_STORAGE_KEY = 'iwego:defaultRatifiedCountryIds'
+const DEFAULT_RATIFIED_IDS = ['NO']
 const SIGNED_PARAM = 'countries'
 const RATIFIED_PARAM = 'ratified'
 
-function loadLockedIds(): Set<string> {
+function loadIdSet(key: string, fallback: string[]): Set<string> {
   try {
-    const raw = localStorage.getItem(LOCKED_IDS_STORAGE_KEY)
+    const raw = localStorage.getItem(key)
     if (raw) {
       const parsed = JSON.parse(raw)
       if (Array.isArray(parsed)) return new Set(parsed)
@@ -21,12 +23,12 @@ function loadLockedIds(): Set<string> {
   } catch {
     // localStorage unavailable or corrupted — fall back to the default below.
   }
-  return new Set(DEFAULT_LOCKED_IDS)
+  return new Set(fallback)
 }
 
-function saveLockedIds(ids: Set<string>) {
+function saveIdSet(key: string, ids: Set<string>) {
   try {
-    localStorage.setItem(LOCKED_IDS_STORAGE_KEY, JSON.stringify([...ids]))
+    localStorage.setItem(key, JSON.stringify([...ids]))
   } catch {
     // Best-effort persistence; ignore if storage is unavailable.
   }
@@ -51,17 +53,20 @@ function loadIdsFromUrl(param: string): Set<string> {
 
 export const useSelectionStore = defineStore('selection', {
   state: () => {
-    const lockedIds = loadLockedIds()
+    const lockedIds = loadIdSet(LOCKED_IDS_STORAGE_KEY, DEFAULT_LOCKED_IDS)
+    const defaultRatifiedIds = loadIdSet(DEFAULT_RATIFIED_IDS_STORAGE_KEY, DEFAULT_RATIFIED_IDS)
     const sharedSelection = loadIdsFromUrl(SIGNED_PARAM)
-    const selectedIds =
-      sharedSelection.size > 0 ? new Set([...sharedSelection, ...lockedIds]) : new Set(lockedIds)
+    // Locked and default-ratified countries are always pre-selected.
+    const selectedIds = new Set([...sharedSelection, ...lockedIds, ...defaultRatifiedIds])
     // A country can only be ratified if it was actually signed.
+    const sharedRatified = loadIdsFromUrl(RATIFIED_PARAM)
     const ratifiedIds = new Set(
-      [...loadIdsFromUrl(RATIFIED_PARAM)].filter((id) => selectedIds.has(id)),
+      [...sharedRatified, ...defaultRatifiedIds].filter((id) => selectedIds.has(id)),
     )
     return {
       selectedIds,
       lockedIds,
+      defaultRatifiedIds,
       ratifiedIds,
     }
   },
@@ -150,9 +155,12 @@ export const useSelectionStore = defineStore('selection', {
     },
 
     reset() {
-      // Locked countries can't be cleared either — reset falls back to them.
-      this.selectedIds = new Set(this.lockedIds)
-      this.ratifiedIds = new Set([...this.ratifiedIds].filter((id) => this.lockedIds.has(id)))
+      // Locked and default-ratified countries can't be cleared either —
+      // reset falls back to exactly that baseline.
+      this.selectedIds = new Set([...this.lockedIds, ...this.defaultRatifiedIds])
+      this.ratifiedIds = new Set(
+        [...this.defaultRatifiedIds].filter((id) => this.selectedIds.has(id)),
+      )
     },
 
     toggleLocked(id: string) {
@@ -163,7 +171,7 @@ export const useSelectionStore = defineStore('selection', {
         lockedIds.add(id)
       }
       this.lockedIds = lockedIds
-      saveLockedIds(lockedIds)
+      saveIdSet(LOCKED_IDS_STORAGE_KEY, lockedIds)
 
       // Newly locked countries are pinned into the current selection.
       if (lockedIds.has(id) && !this.selectedIds.has(id)) {
@@ -180,6 +188,28 @@ export const useSelectionStore = defineStore('selection', {
         ratifiedIds.add(id)
       }
       this.ratifiedIds = ratifiedIds
+    },
+
+    /** Toggles whether a country is ratified (and pre-selected) by default on every load. */
+    toggleDefaultRatified(id: string) {
+      const defaultRatifiedIds = new Set(this.defaultRatifiedIds)
+      if (defaultRatifiedIds.has(id)) {
+        defaultRatifiedIds.delete(id)
+      } else {
+        defaultRatifiedIds.add(id)
+      }
+      this.defaultRatifiedIds = defaultRatifiedIds
+      saveIdSet(DEFAULT_RATIFIED_IDS_STORAGE_KEY, defaultRatifiedIds)
+
+      // Newly default-ratified countries are signed and ratified right away.
+      if (defaultRatifiedIds.has(id)) {
+        if (!this.selectedIds.has(id)) {
+          this.selectedIds = new Set(this.selectedIds).add(id)
+        }
+        if (!this.ratifiedIds.has(id)) {
+          this.ratifiedIds = new Set(this.ratifiedIds).add(id)
+        }
+      }
     },
   },
 })
