@@ -54,12 +54,14 @@ function computeBounds(geo: FeatureCollection): maplibregl.LngLatBoundsLike {
 
 function applySelectionState() {
   if (!map) return
+  const goalReached = store.goalReached
   for (const country of store.countries) {
     map.setFeatureState(
       { source: SOURCE_ID, id: country.id },
       {
         selected: store.selectedIds.has(country.id),
         locked: store.lockedIds.has(country.id),
+        goalReached,
       },
     )
   }
@@ -110,10 +112,18 @@ function setupMap(map: maplibregl.Map) {
       type: 'fill',
       source: SOURCE_ID,
       paint: {
+        // Gold marks a plain selection; once the coalition actually clears
+        // the qualified-majority bar, every selected country flips to green
+        // so "we're there" reads at a glance, not just in the side panel.
         'fill-color': [
           'case',
           ['boolean', ['feature-state', 'selected'], false],
-          '#e0b13c',
+          [
+            'case',
+            ['boolean', ['feature-state', 'goalReached'], false],
+            '#43a047',
+            '#e0b13c',
+          ],
           '#efe9d8',
         ],
         'fill-opacity': [
@@ -138,7 +148,12 @@ function setupMap(map: maplibregl.Map) {
           ['boolean', ['feature-state', 'locked'], false],
           '#efe9d8',
           ['boolean', ['feature-state', 'selected'], false],
-          '#f3cf76',
+          [
+            'case',
+            ['boolean', ['feature-state', 'goalReached'], false],
+            '#81c784',
+            '#f3cf76',
+          ],
           '#5c6f9e',
         ],
         'line-width': [

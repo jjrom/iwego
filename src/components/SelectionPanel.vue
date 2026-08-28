@@ -303,7 +303,7 @@ async function share() {
 
 .requirement.met {
   color: var(--color-text);
-  border-left-color: var(--color-gold);
+  border-left-color: var(--color-success);
 }
 
 .req-mark {
@@ -321,8 +321,8 @@ async function share() {
 }
 
 .requirement.met .req-mark {
-  background: var(--color-gold-soft);
-  color: var(--color-gold);
+  background: var(--color-success-soft);
+  color: var(--color-success);
 }
 
 .req-label {
@@ -382,7 +382,7 @@ async function share() {
 }
 
 .bar-fill--met {
-  background: var(--color-gold);
+  background: var(--color-success);
 }
 
 .selected-list {
