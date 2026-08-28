@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useSelectionStore } from '../stores/selection'
 
 const store = useSelectionStore()
 
 const gniShare = computed(() => store.selectedGniShare)
+const shareStatus = ref<'idle' | 'copied' | 'error'>('idle')
 
 function formatGni(n: number): string {
   return `$${new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 1 }).format(n)}`
@@ -13,19 +14,55 @@ function formatGni(n: number): string {
 function formatPercent(n: number): string {
   return `${n.toFixed(1)}%`
 }
+
+async function copyToClipboard(text: string): Promise<boolean> {
+  try {
+    await navigator.clipboard.writeText(text)
+    return true
+  } catch {
+    // Fallback for contexts without Clipboard API permission (e.g. plain http).
+    try {
+      const textarea = document.createElement('textarea')
+      textarea.value = text
+      textarea.style.position = 'fixed'
+      textarea.style.opacity = '0'
+      document.body.appendChild(textarea)
+      textarea.focus()
+      textarea.select()
+      const ok = document.execCommand('copy')
+      document.body.removeChild(textarea)
+      return ok
+    } catch {
+      return false
+    }
+  }
+}
+
+async function share() {
+  const ok = await copyToClipboard(store.shareUrl)
+  shareStatus.value = ok ? 'copied' : 'error'
+  setTimeout(() => {
+    shareStatus.value = 'idle'
+  }, 2000)
+}
 </script>
 
 <template>
   <div class="panel">
     <div class="panel-header">
       <h2>Coalition</h2>
-      <button
-        class="reset-btn"
-        :disabled="store.selectedCountries.length === 0"
-        @click="store.reset()"
-      >
-        Clear coalition
-      </button>
+      <div class="header-actions">
+        <span v-if="shareStatus === 'copied'" class="share-status">Link copied</span>
+        <span v-else-if="shareStatus === 'error'" class="share-status share-status--error">Copy failed</span>
+        <button class="share-btn" @click="share">Share</button>
+        <button
+          class="reset-btn"
+          :disabled="store.selectedCountries.length === 0"
+          @click="store.reset()"
+        >
+          Clear coalition
+        </button>
+      </div>
     </div>
 
     <div v-if="store.goalReached" class="ratification">
@@ -120,6 +157,23 @@ function formatPercent(n: number): string {
   color: var(--color-text);
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.share-status {
+  font-size: 0.75rem;
+  color: var(--color-gold);
+  white-space: nowrap;
+}
+
+.share-status--error {
+  color: var(--color-crimson);
+}
+
+.share-btn,
 .reset-btn {
   padding: 0.35rem 0.75rem;
   border: 1px solid var(--color-line);
@@ -136,10 +190,12 @@ function formatPercent(n: number): string {
   cursor: not-allowed;
 }
 
+.share-btn:hover,
 .reset-btn:not(:disabled):hover {
   border-color: var(--color-gold);
 }
 
+.share-btn:focus-visible,
 .reset-btn:focus-visible,
 .remove-btn:focus-visible {
   outline: 2px solid var(--color-gold);

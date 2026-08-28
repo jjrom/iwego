@@ -8,6 +8,7 @@ const GNI_GOAL_SHARE = 50
 
 const LOCKED_IDS_STORAGE_KEY = 'iwego:lockedCountryIds'
 const DEFAULT_LOCKED_IDS = ['NO', 'FR', 'GR']
+const SHARE_PARAM = 'countries'
 
 function loadLockedIds(): Set<string> {
   try {
@@ -30,11 +31,32 @@ function saveLockedIds(ids: Set<string>) {
   }
 }
 
+/** Reads the shared coalition (if any) out of the current page URL. */
+function loadSelectionFromUrl(): Set<string> | null {
+  try {
+    const params = new URLSearchParams(window.location.search)
+    const raw = params.get(SHARE_PARAM)
+    if (!raw) return null
+    const validIds = new Set(rawCountries.map((c) => c.id))
+    const ids = raw
+      .split(',')
+      .map((id) => id.trim().toUpperCase())
+      .filter((id) => validIds.has(id))
+    return ids.length > 0 ? new Set(ids) : null
+  } catch {
+    return null
+  }
+}
+
 export const useSelectionStore = defineStore('selection', {
   state: () => {
     const lockedIds = loadLockedIds()
+    const sharedSelection = loadSelectionFromUrl()
+    const selectedIds = sharedSelection
+      ? new Set([...sharedSelection, ...lockedIds])
+      : new Set(lockedIds)
     return {
-      selectedIds: new Set<string>(lockedIds),
+      selectedIds,
       lockedIds,
     }
   },
@@ -72,6 +94,14 @@ export const useSelectionStore = defineStore('selection', {
 
     selectedGniShare(): number {
       return this.selectedCountries.reduce((sum, c) => sum + c.gniSharePercent, 0)
+    },
+
+    /** A URL that reproduces the current coalition when opened. */
+    shareUrl(): string {
+      const ids = [...this.selectedIds].sort()
+      const url = new URL(window.location.href)
+      url.search = ids.length > 0 ? `${SHARE_PARAM}=${ids.join(',')}` : ''
+      return url.toString()
     },
 
     countRequirementMet(): boolean {

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useSelectionStore } from './stores/selection'
 import EuropeMap from './components/EuropeMap.vue'
 import SelectionPanel from './components/SelectionPanel.vue'
@@ -11,6 +11,16 @@ const store = useSelectionStore()
 const totalGni = computed(() => store.totalGni)
 const memberStateCount = computed(() => store.countries.length)
 const preferencesOpen = ref(false)
+
+// Keep the address bar in sync with the coalition so the current URL is
+// always a valid share link, without adding a history entry per click.
+watch(
+  () => store.selectedIds,
+  () => {
+    window.history.replaceState(null, '', store.shareUrl)
+  },
+  { deep: true, immediate: true },
+)
 
 function formatGni(n: number): string {
   return `$${new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 1 }).format(n)}`
