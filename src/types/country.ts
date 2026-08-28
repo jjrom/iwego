@@ -13,4 +13,6 @@ export interface CountryWithShares extends Country {
   gniShare: number
   selected: boolean
   locked: boolean
+  /** Signed (selected) and formally ratified — the second step of the process. */
+  ratified: boolean
 }

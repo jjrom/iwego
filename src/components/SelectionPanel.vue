@@ -115,23 +115,31 @@ async function share() {
         v-for="c in store.selectedCountries"
         :key="c.id"
         class="selected-item"
-        :class="{ locked: c.locked }"
+        :class="{ locked: c.locked, ratified: c.ratified }"
       >
-        <span class="selected-item-name">
-          <span v-if="c.locked" class="lock-icon" title="Pinned in Preferences">🔒</span>
-          {{ c.name }}
-        </span>
-        <span class="selected-item-details">
-          {{ formatGni(c.gni) }} &middot; {{ c.gniSharePercent.toFixed(2) }}% GNI
-        </span>
-        <button
-          v-if="!c.locked"
-          class="remove-btn"
-          :aria-label="`Remove ${c.name}`"
-          @click="store.removeCountry(c.id)"
-        >
-          ✕
-        </button>
+        <div class="selected-item-row">
+          <span class="selected-item-name">
+            <span v-if="c.locked" class="lock-icon" title="Pinned in Preferences">🔒</span>
+            {{ c.name }}
+          </span>
+          <button
+            v-if="!c.locked"
+            class="remove-btn"
+            :aria-label="`Remove ${c.name}`"
+            @click="store.removeCountry(c.id)"
+          >
+            ✕
+          </button>
+        </div>
+        <div class="selected-item-row">
+          <span class="selected-item-details">
+            {{ formatGni(c.gni) }} &middot; {{ c.gniSharePercent.toFixed(2) }}% GNI
+          </span>
+          <label class="ratify-toggle">
+            <input type="checkbox" :checked="c.ratified" @change="store.toggleRatified(c.id)" />
+            Ratified
+          </label>
+        </div>
       </li>
     </ul>
   </div>
@@ -404,9 +412,8 @@ async function share() {
 
 .selected-item {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
+  flex-direction: column;
+  gap: 0.2rem;
   padding: 0.35rem 0.5rem;
   background: var(--color-surface-raised);
   border-radius: 3px;
@@ -415,11 +422,30 @@ async function share() {
   color: var(--color-text);
 }
 
+.selected-item-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
 /* Locked (pinned) items get a solid accent border, same treatment as the
    table, so "can't be removed" reads as a distinct state at a glance. */
 .selected-item.locked {
   border-left-color: var(--color-gold);
   background: var(--color-gold-soft);
+}
+
+/* Ratified items get the same diagonal hatch used on the map, so the
+   signature -> ratification step reads consistently in both places. */
+.selected-item.ratified {
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(13, 24, 48, 0.4) 0,
+    rgba(13, 24, 48, 0.4) 2px,
+    transparent 2px,
+    transparent 7px
+  );
 }
 
 .selected-item-name {
@@ -436,6 +462,23 @@ async function share() {
   color: var(--color-text-muted);
   font-size: 0.74rem;
   white-space: nowrap;
+}
+
+.ratify-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.72rem;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.ratify-toggle input[type='checkbox'] {
+  accent-color: var(--color-gold);
+  width: 0.85rem;
+  height: 0.85rem;
+  cursor: pointer;
 }
 
 .remove-btn {

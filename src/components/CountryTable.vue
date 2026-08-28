@@ -55,13 +55,14 @@ function sortIndicator(key: SortKey): string {
           <th @click="sortBy('name')">Member state {{ sortIndicator('name') }}</th>
           <th @click="sortBy('gni')">GNI {{ sortIndicator('gni') }}</th>
           <th @click="sortBy('gniShare')">Share of GNI {{ sortIndicator('gniShare') }}</th>
+          <th class="ratified-header">Ratified</th>
         </tr>
       </thead>
       <tbody>
         <tr
           v-for="c in sortedCountries"
           :key="c.id"
-          :class="{ selected: c.selected, locked: c.locked }"
+          :class="{ selected: c.selected, locked: c.locked, ratified: c.ratified }"
           @click="store.toggleCountry(c.id)"
         >
           <td>
@@ -70,6 +71,14 @@ function sortIndicator(key: SortKey): string {
           </td>
           <td class="num">{{ formatGni(c.gni) }}</td>
           <td class="num">{{ formatPercent(c.gniShare, 2) }}</td>
+          <td class="ratified-cell" @click.stop>
+            <input
+              type="checkbox"
+              :checked="c.ratified"
+              :disabled="!c.selected"
+              @change="store.toggleRatified(c.id)"
+            />
+          </td>
         </tr>
       </tbody>
     </table>
@@ -154,5 +163,36 @@ tbody tr.locked {
 
 tbody tr.locked:hover {
   background: var(--color-gold-soft);
+}
+
+/* Ratified rows get the same diagonal hatch used on the map. */
+tbody tr.ratified {
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(13, 24, 48, 0.4) 0,
+    rgba(13, 24, 48, 0.4) 2px,
+    transparent 2px,
+    transparent 7px
+  );
+}
+
+.ratified-header {
+  text-align: center;
+}
+
+.ratified-cell {
+  text-align: center;
+}
+
+.ratified-cell input[type='checkbox'] {
+  accent-color: var(--color-gold);
+  width: 0.9rem;
+  height: 0.9rem;
+  cursor: pointer;
+}
+
+.ratified-cell input[type='checkbox']:disabled {
+  cursor: not-allowed;
+  opacity: 0.35;
 }
 </style>

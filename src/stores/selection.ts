@@ -8,7 +8,8 @@ const GNI_GOAL_SHARE = 50
 
 const LOCKED_IDS_STORAGE_KEY = 'iwego:lockedCountryIds'
 const DEFAULT_LOCKED_IDS = ['NO', 'FR', 'GR']
-const SHARE_PARAM = 'countries'
+const SIGNED_PARAM = 'countries'
+const RATIFIED_PARAM = 'ratified'
 
 function loadLockedIds(): Set<string> {
   try {
@@ -31,33 +32,37 @@ function saveLockedIds(ids: Set<string>) {
   }
 }
 
-/** Reads the shared coalition (if any) out of the current page URL. */
-function loadSelectionFromUrl(): Set<string> | null {
+/** Reads a comma-separated list of country ids out of a URL query param. */
+function loadIdsFromUrl(param: string): Set<string> {
   try {
     const params = new URLSearchParams(window.location.search)
-    const raw = params.get(SHARE_PARAM)
-    if (!raw) return null
+    const raw = params.get(param)
+    if (!raw) return new Set()
     const validIds = new Set(rawCountries.map((c) => c.id))
     const ids = raw
       .split(',')
       .map((id) => id.trim().toUpperCase())
       .filter((id) => validIds.has(id))
-    return ids.length > 0 ? new Set(ids) : null
+    return new Set(ids)
   } catch {
-    return null
+    return new Set()
   }
 }
 
 export const useSelectionStore = defineStore('selection', {
   state: () => {
     const lockedIds = loadLockedIds()
-    const sharedSelection = loadSelectionFromUrl()
-    const selectedIds = sharedSelection
-      ? new Set([...sharedSelection, ...lockedIds])
-      : new Set(lockedIds)
+    const sharedSelection = loadIdsFromUrl(SIGNED_PARAM)
+    const selectedIds =
+      sharedSelection.size > 0 ? new Set([...sharedSelection, ...lockedIds]) : new Set(lockedIds)
+    // A country can only be ratified if it was actually signed.
+    const ratifiedIds = new Set(
+      [...loadIdsFromUrl(RATIFIED_PARAM)].filter((id) => selectedIds.has(id)),
+    )
     return {
       selectedIds,
       lockedIds,
+      ratifiedIds,
     }
   },
 
@@ -85,6 +90,7 @@ export const useSelectionStore = defineStore('selection', {
         gniShare: c.gniSharePercent,
         selected: this.selectedIds.has(c.id),
         locked: this.lockedIds.has(c.id),
+        ratified: this.ratifiedIds.has(c.id),
       }))
     },
 
@@ -96,11 +102,15 @@ export const useSelectionStore = defineStore('selection', {
       return this.selectedCountries.reduce((sum, c) => sum + c.gniSharePercent, 0)
     },
 
-    /** A URL that reproduces the current coalition when opened. */
+    /** A URL that reproduces the current coalition (signatures + ratifications) when opened. */
     shareUrl(): string {
-      const ids = [...this.selectedIds].sort()
+      const signedIds = [...this.selectedIds].sort()
+      const ratifiedIds = [...this.ratifiedIds].sort()
       const url = new URL(window.location.href)
-      url.search = ids.length > 0 ? `${SHARE_PARAM}=${ids.join(',')}` : ''
+      const params = new URLSearchParams()
+      if (signedIds.length > 0) params.set(SIGNED_PARAM, signedIds.join(','))
+      if (ratifiedIds.length > 0) params.set(RATIFIED_PARAM, ratifiedIds.join(','))
+      url.search = params.toString()
       return url.toString()
     },
 
@@ -122,6 +132,8 @@ export const useSelectionStore = defineStore('selection', {
       if (this.lockedIds.has(id)) return // locked countries can't be deselected
       if (this.selectedIds.has(id)) {
         this.selectedIds.delete(id)
+        this.ratifiedIds.delete(id) // can't stay ratified once un-signed
+        this.ratifiedIds = new Set(this.ratifiedIds)
       } else {
         this.selectedIds.add(id)
       }
@@ -133,11 +145,14 @@ export const useSelectionStore = defineStore('selection', {
       if (this.lockedIds.has(id)) return
       this.selectedIds.delete(id)
       this.selectedIds = new Set(this.selectedIds)
+      this.ratifiedIds.delete(id)
+      this.ratifiedIds = new Set(this.ratifiedIds)
     },
 
     reset() {
       // Locked countries can't be cleared either — reset falls back to them.
       this.selectedIds = new Set(this.lockedIds)
+      this.ratifiedIds = new Set([...this.ratifiedIds].filter((id) => this.lockedIds.has(id)))
     },
 
     toggleLocked(id: string) {
@@ -154,6 +169,17 @@ export const useSelectionStore = defineStore('selection', {
       if (lockedIds.has(id) && !this.selectedIds.has(id)) {
         this.selectedIds = new Set(this.selectedIds).add(id)
       }
+    },
+
+    toggleRatified(id: string) {
+      if (!this.selectedIds.has(id)) return // must be signed before it can be ratified
+      const ratifiedIds = new Set(this.ratifiedIds)
+      if (ratifiedIds.has(id)) {
+        ratifiedIds.delete(id)
+      } else {
+        ratifiedIds.add(id)
+      }
+      this.ratifiedIds = ratifiedIds
     },
   },
 })

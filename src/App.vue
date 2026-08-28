@@ -12,10 +12,11 @@ const totalGni = computed(() => store.totalGni)
 const memberStateCount = computed(() => store.countries.length)
 const preferencesOpen = ref(false)
 
-// Keep the address bar in sync with the coalition so the current URL is
-// always a valid share link, without adding a history entry per click.
+// Keep the address bar in sync with the coalition (signatures and
+// ratifications) so the current URL is always a valid share link, without
+// adding a history entry per click.
 watch(
-  () => store.selectedIds,
+  () => [store.selectedIds, store.ratifiedIds],
   () => {
     window.history.replaceState(null, '', store.shareUrl)
   },

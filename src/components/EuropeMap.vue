@@ -15,10 +15,28 @@ let resizeObserver: ResizeObserver | null = null
 
 const SOURCE_ID = 'countries'
 const FILL_LAYER = 'countries-fill'
+const HATCH_LAYER = 'countries-hatch'
 const LINE_LAYER = 'countries-line'
+const HATCH_IMAGE_ID = 'ratified-hatch'
 
 function formatGni(n: number): string {
   return `$${new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 1 }).format(n)}`
+}
+
+/** A small tileable diagonal-stripe pattern marking a ratified country. */
+function createHatchPattern(): ImageData {
+  const size = 10
+  const canvas = document.createElement('canvas')
+  canvas.width = size
+  canvas.height = size
+  const ctx = canvas.getContext('2d') as CanvasRenderingContext2D
+  ctx.strokeStyle = 'rgba(13, 24, 48, 0.55)'
+  ctx.lineWidth = 2.2
+  ctx.beginPath()
+  ctx.moveTo(0, size)
+  ctx.lineTo(size, 0)
+  ctx.stroke()
+  return ctx.getImageData(0, 0, size, size)
 }
 
 function computeBounds(geo: FeatureCollection): maplibregl.LngLatBoundsLike {
@@ -61,6 +79,7 @@ function applySelectionState() {
       {
         selected: store.selectedIds.has(country.id),
         locked: store.lockedIds.has(country.id),
+        ratified: store.ratifiedIds.has(country.id),
         goalReached,
       },
     )
@@ -107,6 +126,10 @@ function setupMap(map: maplibregl.Map) {
       promoteId: 'id',
     })
 
+    if (!activeMap.hasImage(HATCH_IMAGE_ID)) {
+      activeMap.addImage(HATCH_IMAGE_ID, createHatchPattern())
+    }
+
     activeMap.addLayer({
       id: FILL_LAYER,
       type: 'fill',
@@ -132,6 +155,18 @@ function setupMap(map: maplibregl.Map) {
           ['case', ['boolean', ['feature-state', 'hover'], false], 0.85, 0.7],
           ['case', ['boolean', ['feature-state', 'hover'], false], 0.35, 0.12],
         ],
+      },
+    })
+
+    // Ratified countries get a diagonal hatch overlay on top of their plain
+    // (gold/green) fill — the signature -> ratification step, made visible.
+    activeMap.addLayer({
+      id: HATCH_LAYER,
+      type: 'fill',
+      source: SOURCE_ID,
+      paint: {
+        'fill-pattern': HATCH_IMAGE_ID,
+        'fill-opacity': ['case', ['boolean', ['feature-state', 'ratified'], false], 1, 0],
       },
     })
 
@@ -224,6 +259,7 @@ onBeforeUnmount(() => {
 
 watch(() => store.selectedIds, applySelectionState, { deep: true })
 watch(() => store.lockedIds, applySelectionState, { deep: true })
+watch(() => store.ratifiedIds, applySelectionState, { deep: true })
 </script>
 
 <template>
