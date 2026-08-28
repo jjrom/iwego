@@ -111,7 +111,12 @@ async function share() {
       <li v-if="store.selectedCountries.length === 0" class="empty">
         Select member states on the map to begin a coalition.
       </li>
-      <li v-for="c in store.selectedCountries" :key="c.id" class="selected-item">
+      <li
+        v-for="c in store.selectedCountries"
+        :key="c.id"
+        class="selected-item"
+        :class="{ locked: c.locked }"
+      >
         <span class="selected-item-name">
           <span v-if="c.locked" class="lock-icon" title="Pinned in Preferences">🔒</span>
           {{ c.name }}
@@ -405,8 +410,16 @@ async function share() {
   padding: 0.35rem 0.5rem;
   background: var(--color-surface-raised);
   border-radius: 3px;
+  border-left: 3px solid transparent;
   font-size: 0.85rem;
   color: var(--color-text);
+}
+
+/* Locked (pinned) items get a solid accent border, same treatment as the
+   table, so "can't be removed" reads as a distinct state at a glance. */
+.selected-item.locked {
+  border-left-color: var(--color-gold);
+  background: var(--color-gold-soft);
 }
 
 .selected-item-name {

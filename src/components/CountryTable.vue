@@ -61,7 +61,7 @@ function sortIndicator(key: SortKey): string {
         <tr
           v-for="c in sortedCountries"
           :key="c.id"
-          :class="{ selected: c.selected }"
+          :class="{ selected: c.selected, locked: c.locked }"
           @click="store.toggleCountry(c.id)"
         >
           <td>
@@ -130,6 +130,7 @@ td.num {
 
 tbody tr {
   cursor: pointer;
+  border-left: 3px solid transparent;
 }
 
 tbody tr:hover {
@@ -142,5 +143,16 @@ tbody tr.selected {
 
 tbody tr.selected td:first-child {
   color: var(--color-gold);
+}
+
+/* Locked (pinned) rows get a solid accent border so "can't be removed" reads
+   as a distinct state from a plain (removable) selection. */
+tbody tr.locked {
+  border-left-color: var(--color-gold);
+  cursor: default;
+}
+
+tbody tr.locked:hover {
+  background: var(--color-gold-soft);
 }
 </style>

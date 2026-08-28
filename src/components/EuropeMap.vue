@@ -57,7 +57,10 @@ function applySelectionState() {
   for (const country of store.countries) {
     map.setFeatureState(
       { source: SOURCE_ID, id: country.id },
-      { selected: store.selectedIds.has(country.id) },
+      {
+        selected: store.selectedIds.has(country.id),
+        locked: store.lockedIds.has(country.id),
+      },
     )
   }
 }
@@ -127,8 +130,13 @@ function setupMap(map: maplibregl.Map) {
       type: 'line',
       source: SOURCE_ID,
       paint: {
+        // Locked (pinned) countries get a distinct parchment ring so they
+        // read as "can't be removed" at a glance, separate from a plain
+        // (removable) selection.
         'line-color': [
           'case',
+          ['boolean', ['feature-state', 'locked'], false],
+          '#efe9d8',
           ['boolean', ['feature-state', 'selected'], false],
           '#f3cf76',
           '#5c6f9e',
@@ -136,7 +144,9 @@ function setupMap(map: maplibregl.Map) {
         'line-width': [
           'case',
           ['boolean', ['feature-state', 'hover'], false],
-          2,
+          2.5,
+          ['boolean', ['feature-state', 'locked'], false],
+          1.75,
           0.75,
         ],
       },
@@ -198,6 +208,7 @@ onBeforeUnmount(() => {
 })
 
 watch(() => store.selectedIds, applySelectionState, { deep: true })
+watch(() => store.lockedIds, applySelectionState, { deep: true })
 </script>
 
 <template>
