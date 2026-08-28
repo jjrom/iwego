@@ -3,12 +3,14 @@ export interface Country {
   name: string
   population: number
   year: number
-  /** Share of the 31-country bloc's combined GDP, as a given percentage (0-100). */
-  gdpSharePercent: number
+  /** Average Gross National Income in USD, 2020-22 (source: UNdata). */
+  gni: number
+  /** Share of the 31-country bloc's combined GNI, as a given percentage (0-100). */
+  gniSharePercent: number
 }
 
 export interface CountryWithShares extends Country {
-  gdpShare: number
-  populationShare: number
+  gniShare: number
   selected: boolean
+  locked: boolean
 }

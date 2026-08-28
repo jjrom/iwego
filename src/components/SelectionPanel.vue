@@ -4,11 +4,10 @@ import { useSelectionStore } from '../stores/selection'
 
 const store = useSelectionStore()
 
-const gdpShare = computed(() => store.selectedGdpShare)
-const popShare = computed(() => store.selectedPopulationShare)
+const gniShare = computed(() => store.selectedGniShare)
 
-function formatNumber(n: number): string {
-  return new Intl.NumberFormat('en-US').format(Math.round(n))
+function formatGni(n: number): string {
+  return `$${new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 1 }).format(n)}`
 }
 
 function formatPercent(n: number): string {
@@ -47,36 +46,26 @@ function formatPercent(n: number): string {
         <span class="req-label">At least {{ store.minCountries }} member states</span>
         <span class="req-value">{{ store.selectedCountries.length }} / {{ store.minCountries }}</span>
       </div>
-      <div class="requirement" :class="{ met: store.gdpRequirementMet }">
-        <span class="req-mark">{{ store.gdpRequirementMet ? '✓' : '·' }}</span>
-        <span class="req-label">Combined GDP over 50%</span>
-        <span class="req-value">{{ formatPercent(gdpShare) }}</span>
+      <div class="requirement" :class="{ met: store.gniRequirementMet }">
+        <span class="req-mark">{{ store.gniRequirementMet ? '✓' : '·' }}</span>
+        <span class="req-label">Combined GNI over 50%</span>
+        <span class="req-value">{{ formatPercent(gniShare) }}</span>
       </div>
     </div>
 
     <div class="metrics">
       <div class="metric">
         <div class="metric-label">
-          <span>GDP share</span>
-          <span>{{ formatPercent(gdpShare) }}</span>
+          <span>GNI share</span>
+          <span>{{ formatPercent(gniShare) }}</span>
         </div>
         <div class="bar-track">
           <div class="quorum-line" />
           <div
             class="bar-fill"
-            :class="{ 'bar-fill--met': store.gdpRequirementMet }"
-            :style="{ width: `${Math.min(gdpShare, 100)}%` }"
+            :class="{ 'bar-fill--met': store.gniRequirementMet }"
+            :style="{ width: `${Math.min(gniShare, 100)}%` }"
           />
-        </div>
-      </div>
-
-      <div class="metric">
-        <div class="metric-label">
-          <span>Population share <em>(for reference only)</em></span>
-          <span>{{ formatPercent(popShare) }}</span>
-        </div>
-        <div class="bar-track">
-          <div class="bar-fill bar-neutral" :style="{ width: `${Math.min(popShare, 100)}%` }" />
         </div>
       </div>
     </div>
@@ -86,11 +75,21 @@ function formatPercent(n: number): string {
         Select member states on the map to begin a coalition.
       </li>
       <li v-for="c in store.selectedCountries" :key="c.id" class="selected-item">
-        <span class="selected-item-name">{{ c.name }}</span>
-        <span class="selected-item-details">
-          {{ formatNumber(c.population) }} &middot; {{ c.gdpSharePercent.toFixed(2) }}% GDP
+        <span class="selected-item-name">
+          <span v-if="c.locked" class="lock-icon" title="Pinned in Preferences">🔒</span>
+          {{ c.name }}
         </span>
-        <button class="remove-btn" :aria-label="`Remove ${c.name}`" @click="store.removeCountry(c.id)">✕</button>
+        <span class="selected-item-details">
+          {{ formatGni(c.gni) }} &middot; {{ c.gniSharePercent.toFixed(2) }}% GNI
+        </span>
+        <button
+          v-if="!c.locked"
+          class="remove-btn"
+          :aria-label="`Remove ${c.name}`"
+          @click="store.removeCountry(c.id)"
+        >
+          ✕
+        </button>
       </li>
     </ul>
   </div>
@@ -325,10 +324,6 @@ function formatPercent(n: number): string {
   background: var(--color-gold);
 }
 
-.bar-neutral {
-  background: #4a5578;
-}
-
 .selected-list {
   list-style: none;
   margin: 0;
@@ -360,6 +355,11 @@ function formatPercent(n: number): string {
 
 .selected-item-name {
   white-space: nowrap;
+}
+
+.lock-icon {
+  font-size: 0.7rem;
+  margin-right: 0.15rem;
 }
 
 .selected-item-details {

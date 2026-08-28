@@ -17,8 +17,8 @@ const SOURCE_ID = 'countries'
 const FILL_LAYER = 'countries-fill'
 const LINE_LAYER = 'countries-line'
 
-function formatNumber(n: number): string {
-  return new Intl.NumberFormat('en-US').format(Math.round(n))
+function formatGni(n: number): string {
+  return `$${new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 1 }).format(n)}`
 }
 
 function computeBounds(geo: FeatureCollection): maplibregl.LngLatBoundsLike {
@@ -162,12 +162,13 @@ function setupMap(map: maplibregl.Map) {
       const props = feature.properties as { id: string; name: string }
       const country = store.countries.find((c) => c.id === props.id)
       if (country && popup) {
+        const lockPrefix = store.lockedIds.has(country.id) ? '🔒 ' : ''
         popup
           .setLngLat(e.lngLat)
           .setHTML(
-            `<strong>${country.name}</strong>` +
-              `<span>Population <b>${formatNumber(country.population)}</b></span>` +
-              `<span>Share of GDP <b>${country.gdpSharePercent.toFixed(2)}%</b></span>`,
+            `<strong>${lockPrefix}${country.name}</strong>` +
+              `<span>GNI <b>${formatGni(country.gni)}</b></span>` +
+              `<span>Share of GNI <b>${country.gniSharePercent.toFixed(2)}%</b></span>`,
           )
           .addTo(activeMap)
       }

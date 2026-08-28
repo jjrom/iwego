@@ -1,17 +1,19 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useSelectionStore } from './stores/selection'
 import EuropeMap from './components/EuropeMap.vue'
 import SelectionPanel from './components/SelectionPanel.vue'
 import CountryTable from './components/CountryTable.vue'
+import PreferencesModal from './components/PreferencesModal.vue'
 
 const store = useSelectionStore()
 
-const totalPopulation = computed(() => store.totalPopulation)
+const totalGni = computed(() => store.totalGni)
 const memberStateCount = computed(() => store.countries.length)
+const preferencesOpen = ref(false)
 
-function formatNumber(n: number): string {
-  return new Intl.NumberFormat('en-US').format(Math.round(n))
+function formatGni(n: number): string {
+  return `$${new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 1 }).format(n)}`
 }
 </script>
 
@@ -24,13 +26,14 @@ function formatNumber(n: number): string {
       </div>
       <div class="totals">
         <div class="total-item">
-          <span class="total-label">Population</span>
-          <span class="total-value">{{ formatNumber(totalPopulation) }}</span>
+          <span class="total-label">Combined GNI</span>
+          <span class="total-value">{{ formatGni(totalGni) }}</span>
         </div>
         <div class="total-item">
           <span class="total-label">Member states</span>
           <span class="total-value">{{ memberStateCount }}</span>
         </div>
+        <button class="preferences-btn" @click="preferencesOpen = true">&#9881; Preferences</button>
       </div>
     </header>
 
@@ -43,6 +46,8 @@ function formatNumber(n: number): string {
         <CountryTable />
       </div>
     </main>
+
+    <PreferencesModal v-if="preferencesOpen" @close="preferencesOpen = false" />
   </div>
 </template>
 
@@ -81,6 +86,7 @@ function formatNumber(n: number): string {
 
 .totals {
   display: flex;
+  align-items: flex-end;
   gap: 2rem;
 }
 
@@ -101,6 +107,26 @@ function formatNumber(n: number): string {
   font-family: var(--font-mono);
   font-size: 1rem;
   color: var(--color-text);
+}
+
+.preferences-btn {
+  padding: 0.4rem 0.75rem;
+  border: 1px solid var(--color-line);
+  border-radius: 3px;
+  background: var(--color-surface-raised);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.preferences-btn:hover {
+  border-color: var(--color-gold);
+}
+
+.preferences-btn:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
 }
 
 .app-main {

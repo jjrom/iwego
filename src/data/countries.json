@@ -4,216 +4,247 @@
     "name": "Germany",
     "population": 83516593,
     "year": 2024,
-    "gdpSharePercent": 20.73
+    "gniSharePercent": 20.73,
+    "gni": 4440269389069.32
   },
   {
     "id": "AT",
     "name": "Austria",
     "population": 9177982,
     "year": 2024,
-    "gdpSharePercent": 2.29
+    "gniSharePercent": 2.29,
+    "gni": 489761845370.09
   },
   {
     "id": "BE",
     "name": "Belgium",
     "population": 11858610,
     "year": 2024,
-    "gdpSharePercent": 2.88
+    "gniSharePercent": 2.88,
+    "gni": 617714923335.07
   },
   {
     "id": "BG",
     "name": "Bulgaria",
     "population": 6441421,
     "year": 2024,
-    "gdpSharePercent": 0.41
+    "gniSharePercent": 0.41,
+    "gni": 88013427750.97
   },
   {
     "id": "CY",
     "name": "Cyprus",
     "population": 1358282,
     "year": 2024,
-    "gdpSharePercent": 0.14
+    "gniSharePercent": 0.14,
+    "gni": 28949402769.2
   },
   {
     "id": "HR",
     "name": "Croatia",
     "population": 3866200,
     "year": 2024,
-    "gdpSharePercent": 0.35
+    "gniSharePercent": 0.35,
+    "gni": 74905158945.54
   },
   {
     "id": "DK",
     "name": "Denmark",
     "population": 5976992,
     "year": 2024,
-    "gdpSharePercent": 1.96
+    "gniSharePercent": 1.96,
+    "gni": 419294902020.58
   },
   {
     "id": "ES",
     "name": "Spain",
     "population": 48848840,
     "year": 2024,
-    "gdpSharePercent": 6.97
+    "gniSharePercent": 6.97,
+    "gni": 1492303447797.68
   },
   {
     "id": "EE",
     "name": "Estonia",
     "population": 1372341,
     "year": 2024,
-    "gdpSharePercent": 0.18
+    "gniSharePercent": 0.18,
+    "gni": 37951457731.77
   },
   {
     "id": "FI",
     "name": "Finland",
     "population": 5619911,
     "year": 2024,
-    "gdpSharePercent": 1.37
+    "gniSharePercent": 1.37,
+    "gni": 294247720283.6
   },
   {
     "id": "FR",
     "name": "France",
     "population": 68551653,
     "year": 2024,
-    "gdpSharePercent": 14.07
+    "gniSharePercent": 14.07,
+    "gni": 3014134222755.33
   },
   {
     "id": "GR",
     "name": "Greece",
     "population": 10405134,
     "year": 2024,
-    "gdpSharePercent": 1.04
+    "gniSharePercent": 1.04,
+    "gni": 222335300060.17
   },
   {
     "id": "HU",
     "name": "Hungary",
     "population": 9562065,
     "year": 2024,
-    "gdpSharePercent": 0.86
+    "gniSharePercent": 0.86,
+    "gni": 184696325274.57
   },
   {
     "id": "IE",
     "name": "Ireland",
     "population": 5395790,
     "year": 2024,
-    "gdpSharePercent": 1.83
+    "gniSharePercent": 1.83,
+    "gni": 391692114568.72
   },
   {
     "id": "IT",
     "name": "Italy",
     "population": 58952704,
     "year": 2024,
-    "gdpSharePercent": 10.29
+    "gniSharePercent": 10.29,
+    "gni": 2204934925270.31
   },
   {
     "id": "LV",
     "name": "Latvia",
     "population": 1866124,
     "year": 2024,
-    "gdpSharePercent": 0.18
+    "gniSharePercent": 0.18,
+    "gni": 38689338507.91
   },
   {
     "id": "LT",
     "name": "Lithuania",
     "population": 2888278,
     "year": 2024,
-    "gdpSharePercent": 0.33
+    "gniSharePercent": 0.33,
+    "gni": 69864510457.97
   },
   {
     "id": "LU",
     "name": "Luxembourg",
     "population": 677012,
     "year": 2024,
-    "gdpSharePercent": 0.26
+    "gniSharePercent": 0.26,
+    "gni": 56499526379.25
   },
   {
     "id": "MT",
     "name": "Malta",
     "population": 568847,
     "year": 2024,
-    "gdpSharePercent": 0.08
+    "gniSharePercent": 0.08,
+    "gni": 17650462663.37
   },
   {
     "id": "NL",
     "name": "Netherlands",
     "population": 17993485,
     "year": 2024,
-    "gdpSharePercent": 5.05
+    "gniSharePercent": 5.05,
+    "gni": 1081041568844.81
   },
   {
     "id": "PL",
     "name": "Poland",
     "population": 36559233,
     "year": 2024,
-    "gdpSharePercent": 3.24
+    "gniSharePercent": 3.24,
+    "gni": 693555727367.56
   },
   {
     "id": "PT",
     "name": "Portugal",
     "population": 10694681,
     "year": 2024,
-    "gdpSharePercent": 1.22
+    "gniSharePercent": 1.22,
+    "gni": 262141181713.57
   },
   {
     "id": "CZ",
     "name": "Czechia",
     "population": 10905028,
     "year": 2024,
-    "gdpSharePercent": 1.42
+    "gniSharePercent": 1.42,
+    "gni": 303447170954.48
   },
   {
     "id": "RO",
     "name": "Romania",
     "population": 19051804,
     "year": 2024,
-    "gdpSharePercent": 1.42
+    "gniSharePercent": 1.42,
+    "gni": 303122000572.43
   },
   {
     "id": "SK",
     "name": "Slovakia",
     "population": 5422069,
     "year": 2024,
-    "gdpSharePercent": 0.56
+    "gniSharePercent": 0.56,
+    "gni": 119385341865.41
   },
   {
     "id": "SI",
     "name": "Slovenia",
     "population": 2127400,
     "year": 2024,
-    "gdpSharePercent": 0.29
+    "gniSharePercent": 0.29,
+    "gni": 62654048447.71
   },
   {
     "id": "SE",
     "name": "Sweden",
     "population": 10569709,
     "year": 2024,
-    "gdpSharePercent": 2.92
+    "gniSharePercent": 2.92,
+    "gni": 624894219012.82
   },
   {
     "id": "NO",
     "name": "Norway",
     "population": 5572279,
     "year": 2024,
-    "gdpSharePercent": 2.47
+    "gniSharePercent": 2.47,
+    "gni": 528982435929.91
   },
   {
     "id": "IS",
     "name": "Iceland",
     "population": 386506,
     "year": 2024,
-    "gdpSharePercent": 0.13
+    "gniSharePercent": 0.13,
+    "gni": 28709643580.25
   },
   {
     "id": "GB",
     "name": "United Kingdom",
     "population": 69281000,
     "year": 2024,
-    "gdpSharePercent": 15.02
+    "gniSharePercent": 15.02,
+    "gni": 3217092608700.94
   },
   {
     "id": "MC",
     "name": "Monaco",
     "population": 38631,
     "year": 2024,
-    "gdpSharePercent": 0.04
+    "gniSharePercent": 0.04,
+    "gni": 9139676473.17
   }
 ]

@@ -5,9 +5,9 @@ import type { CountryWithShares } from '../types/country'
 
 const store = useSelectionStore()
 
-type SortKey = 'name' | 'population' | 'populationShare' | 'gdpShare'
+type SortKey = 'name' | 'gni' | 'gniShare'
 
-const sortKey = ref<SortKey>('gdpShare')
+const sortKey = ref<SortKey>('gniShare')
 const sortAsc = ref(false)
 
 function sortBy(key: SortKey) {
@@ -33,8 +33,8 @@ const sortedCountries = computed<CountryWithShares[]>(() => {
   return list
 })
 
-function formatNumber(n: number): string {
-  return new Intl.NumberFormat('en-US').format(Math.round(n))
+function formatGni(n: number): string {
+  return `$${new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 1 }).format(n)}`
 }
 
 function formatPercent(n: number, decimals = 1): string {
@@ -53,9 +53,8 @@ function sortIndicator(key: SortKey): string {
       <thead>
         <tr>
           <th @click="sortBy('name')">Member state {{ sortIndicator('name') }}</th>
-          <th @click="sortBy('population')">Population {{ sortIndicator('population') }}</th>
-          <th @click="sortBy('populationShare')">Share of population {{ sortIndicator('populationShare') }}</th>
-          <th @click="sortBy('gdpShare')">Share of GDP {{ sortIndicator('gdpShare') }}</th>
+          <th @click="sortBy('gni')">GNI {{ sortIndicator('gni') }}</th>
+          <th @click="sortBy('gniShare')">Share of GNI {{ sortIndicator('gniShare') }}</th>
         </tr>
       </thead>
       <tbody>
@@ -65,10 +64,12 @@ function sortIndicator(key: SortKey): string {
           :class="{ selected: c.selected }"
           @click="store.toggleCountry(c.id)"
         >
-          <td>{{ c.name }}</td>
-          <td class="num">{{ formatNumber(c.population) }}</td>
-          <td class="num">{{ formatPercent(c.populationShare) }}</td>
-          <td class="num">{{ formatPercent(c.gdpShare, 2) }}</td>
+          <td>
+            <span v-if="c.locked" class="lock-icon" title="Pinned in Preferences">🔒</span>
+            {{ c.name }}
+          </td>
+          <td class="num">{{ formatGni(c.gni) }}</td>
+          <td class="num">{{ formatPercent(c.gniShare, 2) }}</td>
         </tr>
       </tbody>
     </table>
@@ -120,6 +121,11 @@ td {
 td.num {
   font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
+}
+
+.lock-icon {
+  font-size: 0.7rem;
+  margin-right: 0.15rem;
 }
 
 tbody tr {

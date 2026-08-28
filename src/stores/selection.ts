@@ -4,12 +4,40 @@ import type { Country, CountryWithShares } from '../types/country'
 
 const rawCountries = countriesData as Country[]
 const MIN_COUNTRIES = 8
-const GDP_GOAL_SHARE = 50
+const GNI_GOAL_SHARE = 50
+
+const LOCKED_IDS_STORAGE_KEY = 'iwego:lockedCountryIds'
+const DEFAULT_LOCKED_IDS = ['NO', 'FR', 'GR']
+
+function loadLockedIds(): Set<string> {
+  try {
+    const raw = localStorage.getItem(LOCKED_IDS_STORAGE_KEY)
+    if (raw) {
+      const parsed = JSON.parse(raw)
+      if (Array.isArray(parsed)) return new Set(parsed)
+    }
+  } catch {
+    // localStorage unavailable or corrupted — fall back to the default below.
+  }
+  return new Set(DEFAULT_LOCKED_IDS)
+}
+
+function saveLockedIds(ids: Set<string>) {
+  try {
+    localStorage.setItem(LOCKED_IDS_STORAGE_KEY, JSON.stringify([...ids]))
+  } catch {
+    // Best-effort persistence; ignore if storage is unavailable.
+  }
+}
 
 export const useSelectionStore = defineStore('selection', {
-  state: () => ({
-    selectedIds: new Set<string>(),
-  }),
+  state: () => {
+    const lockedIds = loadLockedIds()
+    return {
+      selectedIds: new Set<string>(lockedIds),
+      lockedIds,
+    }
+  },
 
   getters: {
     minCountries(): number {
@@ -20,22 +48,21 @@ export const useSelectionStore = defineStore('selection', {
       return rawCountries
     },
 
-    totalPopulation(): number {
-      return rawCountries.reduce((sum, c) => sum + c.population, 0)
+    /** Sum of the given per-country GNI shares; should be ~100 by construction. */
+    totalGniSharePercent(): number {
+      return rawCountries.reduce((sum, c) => sum + c.gniSharePercent, 0)
     },
 
-    /** Sum of the given per-country GDP shares; should be ~100 by construction. */
-    totalGdpSharePercent(): number {
-      return rawCountries.reduce((sum, c) => sum + c.gdpSharePercent, 0)
+    totalGni(): number {
+      return rawCountries.reduce((sum, c) => sum + c.gni, 0)
     },
 
     countriesWithShares(): CountryWithShares[] {
-      const totalPop = this.totalPopulation
       return rawCountries.map((c) => ({
         ...c,
-        gdpShare: c.gdpSharePercent,
-        populationShare: (c.population / totalPop) * 100,
+        gniShare: c.gniSharePercent,
         selected: this.selectedIds.has(c.id),
+        locked: this.lockedIds.has(c.id),
       }))
     },
 
@@ -43,34 +70,26 @@ export const useSelectionStore = defineStore('selection', {
       return this.countriesWithShares.filter((c) => c.selected)
     },
 
-    selectedPopulation(): number {
-      return this.selectedCountries.reduce((sum, c) => sum + c.population, 0)
-    },
-
-    selectedPopulationShare(): number {
-      if (this.totalPopulation === 0) return 0
-      return (this.selectedPopulation / this.totalPopulation) * 100
-    },
-
-    selectedGdpShare(): number {
-      return this.selectedCountries.reduce((sum, c) => sum + c.gdpSharePercent, 0)
+    selectedGniShare(): number {
+      return this.selectedCountries.reduce((sum, c) => sum + c.gniSharePercent, 0)
     },
 
     countRequirementMet(): boolean {
       return this.selectedCountries.length >= MIN_COUNTRIES
     },
 
-    gdpRequirementMet(): boolean {
-      return this.selectedGdpShare > GDP_GOAL_SHARE
+    gniRequirementMet(): boolean {
+      return this.selectedGniShare > GNI_GOAL_SHARE
     },
 
     goalReached(): boolean {
-      return this.countRequirementMet && this.gdpRequirementMet
+      return this.countRequirementMet && this.gniRequirementMet
     },
   },
 
   actions: {
     toggleCountry(id: string) {
+      if (this.lockedIds.has(id)) return // locked countries can't be deselected
       if (this.selectedIds.has(id)) {
         this.selectedIds.delete(id)
       } else {
@@ -81,12 +100,30 @@ export const useSelectionStore = defineStore('selection', {
     },
 
     removeCountry(id: string) {
+      if (this.lockedIds.has(id)) return
       this.selectedIds.delete(id)
       this.selectedIds = new Set(this.selectedIds)
     },
 
     reset() {
-      this.selectedIds = new Set()
+      // Locked countries can't be cleared either — reset falls back to them.
+      this.selectedIds = new Set(this.lockedIds)
+    },
+
+    toggleLocked(id: string) {
+      const lockedIds = new Set(this.lockedIds)
+      if (lockedIds.has(id)) {
+        lockedIds.delete(id)
+      } else {
+        lockedIds.add(id)
+      }
+      this.lockedIds = lockedIds
+      saveLockedIds(lockedIds)
+
+      // Newly locked countries are pinned into the current selection.
+      if (lockedIds.has(id) && !this.selectedIds.has(id)) {
+        this.selectedIds = new Set(this.selectedIds).add(id)
+      }
     },
   },
 })
