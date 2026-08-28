@@ -273,6 +273,12 @@ watch(() => store.ratifiedIds, applySelectionState, { deep: true })
   min-height: 420px;
 }
 
+@media (max-width: 768px) {
+  .map-container {
+    min-height: 260px;
+  }
+}
+
 :deep(.maplibregl-popup-content) {
   display: flex;
   flex-direction: column;

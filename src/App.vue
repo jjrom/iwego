@@ -146,6 +146,7 @@ function formatGni(n: number): string {
   gap: 1rem;
   padding: 1rem;
   overflow: hidden;
+  min-height: 0;
 }
 
 .map-column {
@@ -160,5 +161,48 @@ function formatGni(n: number): string {
   flex-direction: column;
   gap: 1rem;
   overflow-y: auto;
+}
+
+/* Below tablet width, stack the map above the coalition panel/table and let
+   the whole page scroll, instead of squeezing a fixed two-column dashboard
+   into a phone screen. */
+@media (max-width: 768px) {
+  .app {
+    height: auto;
+    min-height: 100vh;
+  }
+
+  .app-header {
+    flex-wrap: wrap;
+    row-gap: 0.6rem;
+    padding: 0.85rem 1rem;
+  }
+
+  .masthead h1 {
+    font-size: 1.5rem;
+  }
+
+  .totals {
+    flex-wrap: wrap;
+    row-gap: 0.5rem;
+  }
+
+  .app-main {
+    flex-direction: column;
+    overflow: visible;
+    padding: 0.75rem;
+  }
+
+  .map-column {
+    flex: none;
+    width: 100%;
+    height: 45vh;
+    min-height: 280px;
+  }
+
+  .side-column {
+    min-width: 0;
+    overflow-y: visible;
+  }
 }
 </style>
